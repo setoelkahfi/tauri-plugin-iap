@@ -28,6 +28,9 @@ windows = { version = "0.61", features = [
     "Foundation_Collections",
     "Services_Store",
     "System",
+    # `IInitializeWithWindow` and the `HWND` it takes (src/windows.rs).
+    "Win32_Foundation",
+    "Win32_UI_Shell",
 ] }
 windows-collections = "0.2"
 

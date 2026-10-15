@@ -8,7 +8,7 @@ use windows::{
     Services::Store::{
         StoreContext, StoreLicense, StoreProduct, StorePurchaseProperties, StorePurchaseStatus,
     },
-    Win32::UI::Shell::IInitializeWithWindow,
+    Win32::{Foundation::HWND, UI::Shell::IInitializeWithWindow},
 };
 use windows_collections::IIterable;
 
@@ -64,6 +64,10 @@ impl<R: Runtime> Iap<R> {
 
             // Cast the WinRT object to IInitializeWithWindow and initialize it with your HWND
             let init = context.cast::<IInitializeWithWindow>()?;
+            // Tauri's `HWND` comes from whatever `windows` version Tauri depends on, which need
+            // not be this crate's (Tauri 2.12 is on 0.62, this crate on 0.61), and the two types
+            // don't unify. Both wrap the same raw handle, so rebuild ours from the pointer.
+            let hwnd = HWND(hwnd.0);
             unsafe {
                 init.Initialize(hwnd)?;
             }
